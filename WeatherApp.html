@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+
+<style>
+body{
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#eef7fb;
+}
+.container{
+    width:500px;
+    background-color: rgb(227, 168, 226);
+    padding: 40px;
+    border-radius: 10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-family:Trebuchet MS;
+}
+.weather{
+    display:flex;
+    margin-bottom:20px;
+}
+.inputtxt{
+    width:350px;
+    height:35px;
+    border:none;
+    padding:5px;
+}
+.search{
+    width:35px;
+    height:35px;
+    cursor:pointer;
+}
+.box1{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    font-size:28px;
+    margin-bottom:20px;
+}
+.box1 img{
+    width:100px;
+}
+.box{
+    display:flex;
+    align-items:center;
+    margin:10px 0;
+}
+.box img{
+    width:40px;
+    margin-right:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="weather">
+        <input type="text" placeholder="Enter City Name" class="inputtxt" id="textInput">
+        <img src="search.png" class="search">
+    </div>
+
+    <div class="searchResult">
+        <div class="box1">
+            <img src="">
+            <span>City Name</span>
+        </div>
+
+        <div class="box">
+            <img src="temperature.png">
+            <span>Temperature:</span>
+        </div>
+
+        <div class="box">
+            <img src="wind.jpg">
+            <span>Wind Speed:</span>
+        </div>
+
+        <div class="box">
+            <img src="humidity.png">
+            <span>Humidity:</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const apiKey = "61962479962d4c0ab0a160437262102";
+
+document.querySelector(".search").addEventListener("click", function () {
+
+    const city = document.getElementById("textInput").value;
+
+    if (!city) {
+        alert("Please enter city name");
+        return;
+    }
+
+    const weatherURL = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`;
+
+    fetch(weatherURL)
+        .then(response => response.json())
+        .then(data => {
+
+            document.querySelector(".box1 span").textContent = data.location.name;
+
+            document.querySelectorAll(".box span")[0].textContent =
+                "Temperature: " + data.current.temp_c + " °C";
+
+            document.querySelectorAll(".box span")[1].textContent =
+                "Wind Speed: " + data.current.wind_kph + " kph";
+
+            document.querySelectorAll(".box span")[2].textContent =
+                "Humidity: " + data.current.humidity + " %";
+
+            document.querySelector(".box1 img").src =
+                "https:" + data.current.condition.icon;
+
+        })
+        .catch(error => {
+            alert("City not found");
+        });
+
+});
+
+</script>
+
+</body>
+</html>
