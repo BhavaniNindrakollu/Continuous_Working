@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Record App</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background:bisque
+        }
+
+        .container {
+            width: 400px;
+            margin: auto;
+            background: rgb(240, 178, 63);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 20%;
+        }
+
+        .add { background: green; }
+        .edit { background: blue; }
+        .delete { background: red; }
+
+        .record {
+            background: #eee;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Student Record</h2>
+
+    <input type="text" id="name" placeholder="Enter Student Name">
+    <input type="text" id="roll" placeholder="Enter Roll Number">
+    <input type="text" id="course" placeholder="Enter Course Name">
+
+    <br>
+    <button class="add" onclick="addStudent()">Add</button>
+
+    <div id="list"></div>
+</div>
+
+<script>
+    let students = [];
+    let editIndex = -1;
+
+    function addStudent() {
+        let name = document.getElementById("name").value;
+        let roll = document.getElementById("roll").value;
+        let course = document.getElementById("course").value;
+
+        // Validation
+        if (name === "" || roll === "" || course === "") {
+
+            alert("Please fill all fields!");
+            return;
+        }
+        // Remove extra spaces
+name = name.trim();
+roll = roll.trim();
+course = course.trim();
+
+// Name validation (only letters + spaces)
+let namePattern = /^[A-Za-z ]+$/;
+if (!namePattern.test(name)) {
+    alert("Name should contain only letters!");
+    return;
+}
+
+// Roll validation (letters + numbers)
+let rollPattern = /^[A-Za-z0-9]+$/;
+if (!rollPattern.test(roll)) {
+    alert("Roll number should contain only letters and numbers!");
+    return;
+}
+
+// Course validation (only letters + spaces)
+let coursePattern = /^[A-Za-z ]+$/;
+if (!coursePattern.test(course)) {
+    alert("Course should contain only letters!");
+    return;
+}
+        
+        
+
+        let student = { name, roll, course };
+
+        if (editIndex === -1) {
+            students.push(student);
+            
+        } else {
+            students[editIndex] = student;
+           
+            editIndex = -1;
+            
+                alert("Updated student details successfully")
+                
+        
+        } 
+
+        clearInputs();
+        displayStudents();
+    }
+
+    function displayStudents() {
+        let list = document.getElementById("list");
+        list.innerHTML = "";
+
+        students.forEach((student, index) => {
+            let div = document.createElement("div");
+            div.className = "record";
+
+            div.innerHTML = `
+                <p><b>Name:</b> ${student.name}</p>
+                <p><b>Roll:</b> ${student.roll}</p>
+                <p><b>Course:</b> ${student.course}</p>
+                <button class="edit" onclick="editStudent(${index})">Edit</button>
+                <button class="delete" onclick="deleteStudent(${index})">Delete</button>
+            `;
+
+            list.appendChild(div);
+        });
+    }
+
+    function deleteStudent(index) {
+       
+        let check = confirm("Are you sure to delete this");
+        if (check){
+             students.splice(index, 1);
+            alert("Deleted Successfully");
+
+        }
+        displayStudents();
+    }
+
+    function editStudent(index) {
+        let student = students[index];
+
+        document.getElementById("name").value = student.name;
+        document.getElementById("roll").value = student.roll;
+        document.getElementById("course").value = student.course;
+
+        editIndex = index;
+    }
+
+    function clearInputs() {
+        document.getElementById("name").value = "";
+        document.getElementById("roll").value = "";
+        document.getElementById("course").value = "";
+    }
+</script>
+
+</body>
+</html>
